@@ -1,5 +1,5 @@
-This is a collection of python scripts I've written using the Meshtastic API.
-
+**This is a collection of python scripts I've written using the Meshtastic API.
+**
 **MeshPacketAnalyzer.py** 
 Decodes and displays data from all packets received.
 
