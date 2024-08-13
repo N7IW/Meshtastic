@@ -8,8 +8,7 @@ decodes and displays data from all packets received.
 displays the time, type and source of each packet received, one line per per packet.
 
 **MeshPacketCounter.py** 
-prints the current time and number of packets received in the previous minute.  
-Updates once per minute.  Provides a simple metric for channel activity.
+prints the current time and number of packets received in the previous minute. Updates once per minute.  Provides a simple metric for channel activity.
 
 **MeshSimpleServer.py**
 sends a response to every Text packet received.  Default is to echo received packet,
