@@ -70,15 +70,14 @@ def onReceive(packet, interface):
     print("  From:", GetNodeName(packet['from']))
     if packet['to'] != 0xffffffff:
         print("    To: ", GetNodeName(packet['to']))
+    if 'hopStart' in packet:
+        print(f"  Hop Start: {packet['hopStart']}")
     if 'hopLimit' in packet:
         print(f"  Hop Limit: {packet['hopLimit']}")
     if 'rxSnr' in packet:
         print(f"  SNR: {packet['rxSnr']}")
     if 'rxRssi' in packet:
         print(f"  RSSI: {packet['rxRssi']}")
-    if 'hopsAway' in packet:
-        print(f"  RSSI: {packet['hopsAway']}")
-
     if 'decoded' in packet:
         print(f"  Port Number: {packet['decoded'].get('portnum', 'N/A')}")
         if packet['decoded'].get('portnum') == 'NODEINFO_APP':
@@ -193,7 +192,7 @@ def onReceive(packet, interface):
         else:
             print(f"  Decoded packet does not contain data we are looking for!")
     else:
-        print("  No 'decoded' key found in the packet. Our node doesn't have the encryption key!")
+        print("  Encrypted packet and we don't have the key!")
     print()
 
 # *** Executable Code Starts Here ***
