@@ -18,3 +18,6 @@ server or BBS
 **MeshTerminal.py**
 connects to a local node via WiFi and a remote node via Mesh.  Implements a command line
 "chat" function between the two nodes.
+
+**MeshBatteryMonitor.py**
+monitors Telemetry packets from a remote node and displays the battery level and voltage.  While waiting, it prints a line with a series of dots, adding a new dot each time any packet is received.  This gives a confirmation that the local node is receieing packets.
