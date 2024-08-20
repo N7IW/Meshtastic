@@ -4,18 +4,21 @@
 # The ipList dictionary must be edited to reflect the ShortName
 # and IP address of your Meshtastic nodes.
 #
+import meshtastic.serial_interface
 import meshtastic.tcp_interface
+from meshtastic import mesh_pb2, storeforward_pb2, paxcount_pb2, BROADCAST_NUM
 from pubsub import pub
 from datetime import datetime
 import pytz
 import time
-#
+
 # Edit ipList as needed for your local nodes
-#
+
 ipList = { "N7IW" : "10.0.0.187",
            'JR02' : '10.0.0.133',
            'JR03' : '10.0.0.197',
-           'JR04' : '10.0.0.56'}
+           'JR04' : '10.0.0.56',
+           '1BA8' : '192.168.1.214'}
 
 def PrintIpList():
     for name, ip in ipList.items():
@@ -23,20 +26,34 @@ def PrintIpList():
         
 def GetLocalNode():
     valid = False
-    while valid == False:
-        print ("> Type ? for options")
-        print ("> Enter Local Node Name:")
-        text = input("> ")
-        if text == '?': PrintIpList()
-        else:
+    while not valid:
+        print("* Connect to Local Node *")
+        print("* Type ? for options    *")
+        print("> Enter Interface Type (tcp|serial):")
+        interface_mode = input("> ")
+        if interface_mode == '?': 
+            print("Help Information:")
+        elif interface_mode == 'tcp':
+            PrintIpList()
+            print("> Enter Local Node Name:")
+            text = input("> ")
             ip_num = ipList.get(text, "None")
-            if ip_num == "None": print ("> Node not found \n>")
-            else: valid = True
-    print ("> Success!")
-    print ("> Connected to:",text)
-    print ("-------------------------------")
-    return ip_num       
- 
+            if ip_num == "None": 
+                print("> Node not found \n>")
+            else:
+                print("> Success!")
+                print("> Connected to:", text)
+                print("-------------------------------")
+                return (ip_num, interface_mode)
+                valid = True
+        elif interface_mode == 'serial':
+            print("Serial Selected")
+            print("> Success!")
+            print("> Connected to: Serial")
+            print("-------------------------------")
+            return interface_mode
+            valid = True
+    
 def GetCurrentTime():
     tz = pytz.timezone('US/Pacific')
     now_tz = tz.localize(datetime.now())
@@ -80,8 +97,14 @@ def onReceive(packet, interface):
    
 # *** Executable Code Starts Here ***
 hostname = GetLocalNode()
-interface = meshtastic.tcp_interface.TCPInterface(hostname)
-pub.subscribe(onConnection, 'meshtastic.connection.established')
-pub.subscribe(onReceive, 'meshtastic.receive')
+if hostname[1] == 'tcp':
+    interface = meshtastic.tcp_interface.TCPInterface(hostname[0])
+    pub.subscribe(onReceive, 'meshtastic.receive')
+    pub.subscribe(onConnection, 'meshtastic.connection.established')
+elif hostname == 'serial':
+    interface = meshtastic.serial_interface.SerialInterface()
+    pub.subscribe(onReceive, 'meshtastic.receive')
+    pub.subscribe(onConnection, 'meshtastic.connection.established')
+
 while True: time.sleep(1)
 interface.close()
