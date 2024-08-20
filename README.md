@@ -2,7 +2,7 @@ This is a collection of python scripts I've written using the Meshtastic API.
 
 
 **MeshPacketAnalyzer.py**
-decodes and displays data from all packets received.
+decodes and displays all data from all packets received.
 
 **MeshTrafficMonitor.py** 
 displays the time, type and source of each packet received, one line per per packet.
